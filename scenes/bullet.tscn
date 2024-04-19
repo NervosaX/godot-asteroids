@@ -13,6 +13,7 @@ texture = ExtResource("1_sq8ed")
 script = ExtResource("2_el6cs")
 
 [node name="VelocityComponent" parent="." node_paths=PackedStringArray("node") instance=ExtResource("3_4gas2")]
+speed = 14.0
 node = NodePath("..")
 
 [node name="ScreenBoundaryComponent" parent="." node_paths=PackedStringArray("node2d") instance=ExtResource("3_ba5up")]
@@ -24,7 +25,6 @@ node2d = NodePath("..")
 shape = SubResource("CircleShape2D_7qavl")
 
 [node name="TimeToLive" type="Timer" parent="."]
-wait_time = 1.5
 one_shot = true
 autostart = true
 

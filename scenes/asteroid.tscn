@@ -13,14 +13,14 @@
 script = ExtResource("1_24s1x")
 
 [node name="VelocityComponent" parent="." node_paths=PackedStringArray("node") instance=ExtResource("2_6ue7w")]
-speed = 2
+speed = 3.0
 node = NodePath("..")
 
 [node name="ScreenBoundaryComponent" parent="." node_paths=PackedStringArray("node2d") instance=ExtResource("3_r28n3")]
 node2d = NodePath("..")
 
 [node name="AsteroidArea" type="Area2D" parent="."]
-scale = Vector2(2, 2)
+scale = Vector2(3, 3)
 
 [node name="Sprite2D" type="Sprite2D" parent="AsteroidArea"]
 modulate = Color(1, 1, 1, 0.627451)

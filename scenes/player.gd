@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @onready var screensize = get_viewport_rect().size
 
-var speed = 800
+var speed = 700
 var rotation_speed = 6
 
 func _physics_process(delta):
