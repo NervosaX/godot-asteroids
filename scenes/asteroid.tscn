@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://bepeoblhvwcx3"]
+
+[ext_resource type="Texture2D" uid="uid://d0g6p1efgf5ue" path="res://assets/cat.svg" id="1_5rbdx"]
+[ext_resource type="Script" path="res://scenes/asteroid.gd" id="1_24s1x"]
+[ext_resource type="PackedScene" uid="uid://c65l0cedo3l1i" path="res://components/velocity_component.tscn" id="2_6ue7w"]
+[ext_resource type="PackedScene" uid="uid://bqjp0ow2hlf35" path="res://components/screen_boundary_component.tscn" id="3_r28n3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_en3gc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_83m4j"]
+
+[node name="Asteroid" type="Node2D" groups=["enemy", "entity"]]
+script = ExtResource("1_24s1x")
+
+[node name="VelocityComponent" parent="." node_paths=PackedStringArray("node") instance=ExtResource("2_6ue7w")]
+speed = 2
+node = NodePath("..")
+
+[node name="ScreenBoundaryComponent" parent="." node_paths=PackedStringArray("node2d") instance=ExtResource("3_r28n3")]
+node2d = NodePath("..")
+
+[node name="AsteroidArea" type="Area2D" parent="."]
+scale = Vector2(2, 2)
+
+[node name="Sprite2D" type="Sprite2D" parent="AsteroidArea"]
+modulate = Color(1, 1, 1, 0.627451)
+material = SubResource("ShaderMaterial_en3gc")
+texture = ExtResource("1_5rbdx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AsteroidArea"]
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_83m4j")
+
+[node name="SafetyTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+autostart = true
+
+[connection signal="area_entered" from="AsteroidArea" to="." method="_on_area_2d_area_entered"]
+[connection signal="timeout" from="SafetyTimer" to="." method="_on_safety_timer_timeout"]

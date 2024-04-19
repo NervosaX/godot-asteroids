@@ -14,6 +14,16 @@ func _physics_process(delta):
 
 	rotation += rotation_direction * rotation_speed * delta
 	move_and_slide()
+
+func _on_shoot_timer_timeout():
+	if not Input.get_action_strength("shoot"):
+		return
+		
+	var bullet_scene = load("res://scenes/bullet.tscn")
+	var bullet = bullet_scene.instantiate()
 	
-	global_position.x = wrapf(global_position.x, 0, screensize.x)
-	global_position.y = wrapf(global_position.y, 0, screensize.y)
+	get_parent().add_child(bullet)
+	
+	var direction = Vector2.RIGHT.rotated(rotation + deg_to_rad(-90)).normalized()
+	bullet.global_position = global_position + direction * 25
+	bullet.direction = direction
