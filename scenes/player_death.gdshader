@@ -3,17 +3,7 @@ shader_type canvas_item;
 uniform sampler2D noise_tex_normal;
 uniform sampler2D noise_tex;
 uniform float progress : hint_range(0.0, 1.0);
-uniform float strength = 1.0;
-
-// If your sprite doesn't have enough space and the explosion gets clipped, 
-// you can uncomment this and adjust the scale
-//void vertex() {
-//	float scale = 3.0;
-//	VERTEX *= scale;
-//
-//	UV *= scale;
-//	UV -= (scale - 1.0) / 2.0;
-//}
+uniform float strength = 1;
 
 void fragment() {
 	vec2 direction = texture(noise_tex_normal, UV).xy; // We're using normal map as direction
