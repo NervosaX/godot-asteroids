@@ -7,10 +7,6 @@ var rotation_speed = 6
 var is_dead = false
 
 
-func _ready():
-	respawn()
-
-
 func _physics_process(delta):
 	var move_input = Input.get_action_strength("thrust")
 	var rotation_direction = Input.get_axis("rotate_left", "rotate_right")
@@ -41,11 +37,11 @@ func _on_area_2d_area_entered(area: Area2D):
 	if is_dead or not node is Asteroid:
 		return
 		
-	node.queue_free()
+	node.process_hit()
 	
 	is_dead = true
 	$AnimationPlayer.play("death")
-	
+
 
 func is_unsafe(enemies: Array[Node], unsafe_distance: int):
 	"""

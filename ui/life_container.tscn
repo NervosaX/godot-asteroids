@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1ogp0ww2fhi"]
+
+[ext_resource type="Texture2D" uid="uid://td0o7gfl80da" path="res://assets/ship.png" id="1_3ut5n"]
+
+[node name="LifeContainer" type="BoxContainer"]
+alignment = 1
+
+[node name="LifeTextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_3ut5n")

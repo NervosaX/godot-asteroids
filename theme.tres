@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://ca8idsl1cgse6"]
+
+[ext_resource type="FontFile" uid="uid://34ok014e5jg5" path="res://assets/VectorBattle-e9XO.ttf" id="1_onr1d"]
+
+[resource]
+default_font = ExtResource("1_onr1d")
