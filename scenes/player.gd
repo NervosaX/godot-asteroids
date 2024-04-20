@@ -4,6 +4,8 @@ extends CharacterBody2D
 
 var speed = 700
 var rotation_speed = 6
+var is_dead = false
+
 
 func _physics_process(delta):
 	var move_input = Input.get_action_strength("thrust")
@@ -16,7 +18,7 @@ func _physics_process(delta):
 	move_and_slide()
 
 func _on_shoot_timer_timeout():
-	if not Input.get_action_strength("shoot"):
+	if is_dead or not Input.get_action_strength("shoot"):
 		return
 		
 	var bullet_scene = load("res://scenes/bullet.tscn")
@@ -27,3 +29,18 @@ func _on_shoot_timer_timeout():
 	var direction = Vector2.RIGHT.rotated(rotation + deg_to_rad(-90)).normalized()
 	bullet.global_position = global_position + direction * 25
 	bullet.direction = direction
+
+
+func _on_area_2d_area_entered(area: Area2D):
+	var node = area.get_parent()
+	if is_dead or not node is Asteroid:
+		return
+		
+	node.queue_free()
+	
+	is_dead = true
+	$AnimationPlayer.play("death")
+	
+func respawn():
+	$AnimationPlayer.play("RESET")
+	is_dead = false

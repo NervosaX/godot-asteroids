@@ -1,29 +1,191 @@
-[gd_scene load_steps=5 format=3 uid="uid://dig87f2vi5hhw"]
+[gd_scene load_steps=15 format=3 uid="uid://dig87f2vi5hhw"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1_ueboy"]
 [ext_resource type="PackedScene" uid="uid://bqjp0ow2hlf35" path="res://components/screen_boundary_component.tscn" id="2_hqvmo"]
+[ext_resource type="Shader" path="res://scenes/player_death.gdshader" id="3_ggwxn"]
 [ext_resource type="Texture2D" uid="uid://td0o7gfl80da" path="res://assets/ship.png" id="3_gmq6t"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fwev3"]
+noise_type = 0
+seed = 30
+frequency = 0.1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b6l7u"]
+width = 64
+height = 64
+normalize = false
+noise = SubResource("FastNoiseLite_fwev3")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2djh8"]
+noise_type = 0
+frequency = 0.1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hkib6"]
+width = 64
+height = 64
+as_normal_map = true
+normalize = false
+noise = SubResource("FastNoiseLite_2djh8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2j8i"]
+shader = ExtResource("3_ggwxn")
+shader_parameter/progress = 0.0
+shader_parameter/strength = 4.0
+shader_parameter/noise_tex_normal = SubResource("NoiseTexture2D_hkib6")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_b6l7u")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0lr6s"]
 size = Vector2(18, 25)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fqjxj"]
+
+[sub_resource type="Animation" id="Animation_e1whj"]
+resource_name = "death"
+length = 1.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ship:use_parent_material")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ship:material:shader_parameter/progress")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Ship:scale")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.21, 0.49),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1.056), Vector2(1, 1.056), Vector2(5, 5.28)]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"respawn"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_uhw5w"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ship:use_parent_material")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ship:material")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("ShaderMaterial_j2j8i")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Ship:material:shader_parameter/progress")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Ship:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1.056)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tvd2h"]
+_data = {
+"RESET": SubResource("Animation_uhw5w"),
+"death": SubResource("Animation_e1whj")
+}
+
 [node name="Player" type="CharacterBody2D" groups=["entity"]]
 position = Vector2(0, 7)
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_ueboy")
 
 [node name="ScreenBoundaryComponent" parent="." node_paths=PackedStringArray("node2d") instance=ExtResource("2_hqvmo")]
 node2d = NodePath("..")
 
 [node name="Ship" type="Sprite2D" parent="."]
-position = Vector2(0, -11)
+material = SubResource("ShaderMaterial_j2j8i")
+use_parent_material = true
+position = Vector2(-0.75, -13)
+scale = Vector2(1, 1.056)
 texture = ExtResource("3_gmq6t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -11.5)
 shape = SubResource("RectangleShape2D_0lr6s")
+disabled = true
 
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 0.2
 autostart = true
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -10)
+shape = SubResource("CapsuleShape2D_fqjxj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_tvd2h")
+}
+
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
